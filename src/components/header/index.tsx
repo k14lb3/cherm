@@ -35,14 +35,14 @@ const socials = [
 const Header: React.FC = () => {
   return (
     <header>
-      <div className="flex justify-between items-center py-[0.81716vh] px-[1.63432vh] border-solid border-b-[0.10214vh] border-white">
-        <h1 className="text-[3.67722vh] select-none">cherm</h1>
-        <div className="flex space-x-[1.63432vh]">
+      <div className="flex justify-between items-center py-2 border-solid border-b-[0.025rem] border-white">
+        <h1 className="text-4xl select-none">cherm</h1>
+        <div className="flex space-x-3">
           {socials.map(({ link, icon: Icon }) => (
             <Link key={link} href={link} passHref>
               <a target="_blank" rel="noopener noreferrer">
                 <Icon
-                  className="aspect-square h-[2.45148vh] hover:opacity-80"
+                  className="aspect-square h-6 hover:opacity-80"
                   fill="#ffffff"
                 />
               </a>

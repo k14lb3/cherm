@@ -11,7 +11,7 @@
 
   html,
   body {
-    @apply font-sauce text-[1.63432vh] leading-[2.45148vh];
+    @apply font-sauce text-[2.3988vh] leading-[3.5982vh];
   }
 
   h1,
@@ -25,5 +25,5 @@
 }
 
 #__next {
-  @apply flex flex-col h-screen w-screen bg-black p-[2.0429vh] text-white;
+  @apply flex flex-col h-screen w-screen bg-black p-4 text-white;
 }
