@@ -13,6 +13,12 @@ const ChatBox: React.FC = () => {
         case ' ':
           store.addChar(' ');
           break;
+        case 'Enter':
+          store.enterInput();
+          break;
+        case 'Backspace':
+          store.deleteChar();
+          break;
         default:
           if (c.length === 1) {
             store.addChar(e.key);
