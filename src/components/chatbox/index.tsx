@@ -36,19 +36,24 @@ const ChatBox: React.FC = () => {
       window.removeEventListener('keydown', keydownEvents);
     };
   }, []);
+
   return (
     <div className="flex-grow p-4 mt-4 border-solid border-[0.025rem] border-white rounded">
-      {conversation.map(({ id, message }) => (
-        <div className="mb-2">
-          <p>
-            <span className="font-bold">
-              {id === ip ? 'you' : 'stranger'} :{' '}
-            </span>
-            {message}
-          </p>
-        </div>
-      ))}
-      <Prompt input={input} />
+      {ip && (
+        <>
+          {conversation.map(({ id, message }) => (
+            <div className="mb-2">
+              <p>
+                <span className="font-bold">
+                  {id === ip ? 'you' : 'stranger'} :{' '}
+                </span>
+                {message}
+              </p>
+            </div>
+          ))}
+          <Prompt input={input} />
+        </>
+      )}
     </div>
   );
 };
