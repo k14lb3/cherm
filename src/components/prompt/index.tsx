@@ -7,7 +7,7 @@ interface PromptProps {
 const Prompt: React.FC<PromptProps> = ({ input }) => {
   return (
     <p className="whitespace-pre-wrap break-all">
-      <span>[me@cherm] : </span>
+      <span className="font-bold">[me@cherm] : </span>
       {input}
       <span className="animate-blink">█</span>
     </p>
