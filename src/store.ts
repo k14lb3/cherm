@@ -5,7 +5,8 @@ interface StoreProps {
   input: string;
   conversation: { id: string; message: string }[];
   setIp: (ip: string) => void;
-  enterInput: () => void;
+  clearInput: () => void;
+  addInput: () => void;
   addChar: (c: string) => void;
   deleteChar: () => void;
 }
@@ -20,14 +21,19 @@ const useStore = create<StoreProps>((set) => ({
       ip: ip,
     }));
   },
-  enterInput: () => {
+  clearInput: () => {
+    set((state) => ({
+      ...state,
+      input: '',
+    }));
+  },
+  addInput: () => {
     set((state) => ({
       ...state,
       conversation: [
         ...state.conversation,
         { id: state.ip, message: state.input },
       ],
-      input: '',
     }));
   },
   addChar: (char) => {

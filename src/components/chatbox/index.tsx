@@ -6,7 +6,8 @@ const ChatBox: React.FC = () => {
   const ip = useStore((state) => state.ip);
   const input = useStore((state) => state.input);
   const conversation = useStore((state) => state.conversation);
-  const enterInput = useStore((state) => state.enterInput);
+  const clearInput = useStore((state) => state.clearInput);
+  const addInput = useStore((state) => state.addInput);
   const addChar = useStore((state) => state.addChar);
   const deleteChar = useStore((state) => state.deleteChar);
 
@@ -16,7 +17,8 @@ const ChatBox: React.FC = () => {
 
       switch (c) {
         case 'Enter':
-          enterInput();
+          addInput();
+          clearInput();
           break;
         case 'Backspace':
           deleteChar();
