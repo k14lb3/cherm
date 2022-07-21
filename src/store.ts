@@ -1,10 +1,10 @@
 import create from 'zustand';
 
 interface StoreProps {
-  ip: string;
+  uid: string;
   input: string;
-  conversation: { id: string; message: string }[];
-  setIp: (ip: string) => void;
+  conversation: { uid: string; message: string }[];
+  setUid: (uid: string) => void;
   clearInput: () => void;
   addInput: () => void;
   addChar: (c: string) => void;
@@ -12,13 +12,13 @@ interface StoreProps {
 }
 
 const useStore = create<StoreProps>((set) => ({
-  ip: '',
+  uid: '',
   input: '',
   conversation: [],
-  setIp: (ip) => {
+  setUid: (uid) => {
     set((state) => ({
       ...state,
-      ip: ip,
+      uid: uid,
     }));
   },
   clearInput: () => {
@@ -32,7 +32,7 @@ const useStore = create<StoreProps>((set) => ({
       ...state,
       conversation: [
         ...state.conversation,
-        { id: state.ip, message: state.input },
+        { uid: state.uid, message: state.input },
       ],
     }));
   },

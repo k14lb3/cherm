@@ -3,7 +3,7 @@ import useStore from '@/store';
 import Prompt from '@/components/prompt';
 
 const ChatBox: React.FC = () => {
-  const ip = useStore((state) => state.ip);
+  const uid = useStore((state) => state.uid);
   const input = useStore((state) => state.input);
   const conversation = useStore((state) => state.conversation);
   const clearInput = useStore((state) => state.clearInput);
@@ -41,13 +41,13 @@ const ChatBox: React.FC = () => {
 
   return (
     <div className="flex-grow p-4 mt-4 border-solid border-[0.025rem] border-white rounded">
-      {ip && (
+      {uid && (
         <>
-          {conversation.map(({ id, message }) => (
+          {conversation.map(({ uid, message }) => (
             <div className="mb-2">
               <p>
                 <span className="font-bold">
-                  {id === ip ? 'you' : 'stranger'} :{' '}
+                  {uid === uid ? 'you' : 'stranger'} :{' '}
                 </span>
                 {message}
               </p>

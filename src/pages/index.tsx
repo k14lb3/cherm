@@ -1,21 +1,15 @@
 import { useEffect } from 'react';
-import useStore from '@/store';
 import { NextPage } from 'next';
 import Head from 'next/head';
+import useStore from '@/store';
+import { autoId } from '@/utils/helpers';
 import Header from '@/components/header';
 import ChatBox from '@/components/chatbox';
 
 const Home: NextPage = () => {
-  const setIp = useStore((state) => state.setIp);
+  const setUid = useStore((state) => state.setUid);
 
-  useEffect(() => {
-    const getIp = async () =>
-      (await (await fetch('https://ident.me/json')).json()).ip;
-
-    const set = async () => setIp(await getIp());
-
-    set();
-  }, []);
+  useEffect(() => setUid(autoId()), []);
 
   return (
     <>
