@@ -1,5 +1,5 @@
-export const commands = {
-  help: 'help',
-  search: 'search',
-  exit: 'exit',
+export const command = {
+  help: 'cherm help',
+  search: 'cherm search',
+  exit: 'cherm exit',
 };
