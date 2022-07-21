@@ -24,6 +24,20 @@
   }
 }
 
+@layer utilities {
+  @keyframes tdl {
+    to {
+      clip-path: inset(0 -1ch 0 0);
+    }
+  }
+
+  .three-dot-loader {
+    display: inline-block;
+    clip-path: inset(0 3ch 0 0);
+    animation: tdl 1s steps(4) infinite;
+  }
+}
+
 #__next {
   @apply flex flex-col h-screen w-screen bg-black p-4 text-white;
 }
