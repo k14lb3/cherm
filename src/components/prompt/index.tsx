@@ -1,10 +1,9 @@
 import React from 'react';
+import useStore from '@/store';
 
-interface PromptProps {
-  input: string;
-}
+const Prompt: React.FC = () => {
+  const input = useStore((state) => state.input);
 
-const Prompt: React.FC<PromptProps> = ({ input }) => {
   return (
     <p className="whitespace-pre-wrap break-all">
       <span className="font-bold">[me@cherm] → </span>
