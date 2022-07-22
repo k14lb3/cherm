@@ -3,7 +3,7 @@ import create from 'zustand';
 interface StoreProps {
   uid: string;
   input: string;
-  conversation: { uid: string; message: string }[];
+  chat: { uid: string; message: string }[];
   setUid: (uid: string) => void;
   clearInput: () => void;
   addInput: () => void;
@@ -14,7 +14,7 @@ interface StoreProps {
 const useStore = create<StoreProps>((set) => ({
   uid: '',
   input: '',
-  conversation: [],
+  chat: [],
   setUid: (uid) => {
     set((state) => ({
       ...state,
@@ -30,8 +30,8 @@ const useStore = create<StoreProps>((set) => ({
   addInput: () => {
     set((state) => ({
       ...state,
-      conversation: [
-        ...state.conversation,
+      chat: [
+        ...state.chat,
         { uid: state.uid, message: state.input },
       ],
     }));

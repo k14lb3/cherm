@@ -6,7 +6,7 @@ import Prompt from '@/components/prompt';
 const ChatBox: React.FC = () => {
   const uid = useStore((state) => state.uid);
   const input = useStore((state) => state.input);
-  const conversation = useStore((state) => state.conversation);
+  const chat = useStore((state) => state.chat);
   const clearInput = useStore((state) => state.clearInput);
   const addInput = useStore((state) => state.addInput);
   const addChar = useStore((state) => state.addChar);
@@ -68,7 +68,7 @@ const ChatBox: React.FC = () => {
     <div className="flex-grow p-4 mt-4 border-solid border-[0.025rem] border-white rounded">
       {uid && (
         <>
-          {conversation.map(({ uid, message }) => (
+          {chat.map(({ uid, message }) => (
             <div className="mb-2">
               <p>
                 <span className="font-bold">
