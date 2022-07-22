@@ -33,7 +33,6 @@ const ChatBox: React.FC = () => {
       if (searching) {
         if (e.ctrlKey && e.key.toLowerCase() === 'c') {
           setSearching(false);
-          addInput();
           clearInput();
           setCursor(true);
         }
