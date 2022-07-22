@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import useStore from '@/store';
+import { command } from '@/utils/constants';
 import Prompt from '@/components/prompt';
 
 const ChatBox: React.FC = () => {
@@ -10,15 +11,40 @@ const ChatBox: React.FC = () => {
   const addInput = useStore((state) => state.addInput);
   const addChar = useStore((state) => state.addChar);
   const deleteChar = useStore((state) => state.deleteChar);
+  const [searching, setSearching] = useState<boolean>(false);
+  const [cursor, setCursor] = useState<boolean>(true);
+
+  const search = async () => {};
+
+  const parseInput = (input: string) => {
+    if (input === command.search) {
+      setSearching(true);
+      search();
+      setCursor(false);
+      return;
+    }
+
+    addInput();
+    clearInput();
+  };
 
   useEffect(() => {
     const keydownEvents = (e: KeyboardEvent) => {
+      if (searching) {
+        if (e.ctrlKey && e.key.toLowerCase() === 'c') {
+          setSearching(false);
+          addInput();
+          clearInput();
+          setCursor(true);
+        }
+        return;
+      }
+
       const c = e.key;
 
       switch (c) {
         case 'Enter':
-          addInput();
-          clearInput();
+          parseInput(input);
           break;
         case 'Backspace':
           deleteChar();
@@ -37,7 +63,7 @@ const ChatBox: React.FC = () => {
     return () => {
       window.removeEventListener('keydown', keydownEvents);
     };
-  }, []);
+  }, [input, searching]);
 
   return (
     <div className="flex-grow p-4 mt-4 border-solid border-[0.025rem] border-white rounded">
@@ -53,7 +79,12 @@ const ChatBox: React.FC = () => {
               </p>
             </div>
           ))}
-          <Prompt input={input} />
+          <Prompt cursor={cursor} />
+          {searching && (
+            <p className="three-dot-loader mt-2 text-gray">
+              searching for a stranger...
+            </p>
+          )}
         </>
       )}
     </div>
