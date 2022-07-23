@@ -87,18 +87,18 @@ const ChatBox: React.FC = () => {
         const room = doc.data();
 
         if (!room!.available) {
+          unsubRoomChatRef.current = onSnapshot(
+            query(collection(roomsRef, uid, 'chat'), orderBy('timestamp')),
+            async (snapshot) =>
+              setChat(snapshot.docs.map((doc) => doc.data() as Chat)),
+          );
+
           setSearching(false);
           setActive(true);
           clearInput();
           setCursor(true);
         }
       });
-
-      unsubRoomChatRef.current = onSnapshot(
-        query(collection(roomsRef, uid, 'chat'), orderBy('timestamp')),
-        async (snapshot) =>
-          setChat(snapshot.docs.map((doc) => doc.data() as Chat)),
-      );
     };
 
     setSearching(true);
@@ -190,7 +190,7 @@ const ChatBox: React.FC = () => {
           )}
           {chat.map((chat) => (
             <div className="mb-2">
-              <p className='break-all'>
+              <p className="break-all">
                 <span className="font-bold">
                   {active
                     ? chat.uid === uid
