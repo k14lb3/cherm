@@ -1,10 +1,18 @@
+import { Timestamp } from 'firebase/firestore';
 import create from 'zustand';
+
+export interface Chat {
+  timestamp?: Timestamp;
+  uid: string;
+  message: string;
+}
 
 interface StoreProps {
   uid: string;
   input: string;
-  chat: { uid: string; message: string }[];
+  chat: Chat[];
   setUid: (uid: string) => void;
+  setChat: (chat: Chat[]) => void;
   clearInput: () => void;
   addInput: () => void;
   addChar: (c: string) => void;
@@ -21,6 +29,12 @@ const useStore = create<StoreProps>((set) => ({
       uid: uid,
     }));
   },
+  setChat: (chat) => {
+    set((state) => ({
+      ...state,
+      chat: chat,
+    }));
+  },
   clearInput: () => {
     set((state) => ({
       ...state,
@@ -30,10 +44,7 @@ const useStore = create<StoreProps>((set) => ({
   addInput: () => {
     set((state) => ({
       ...state,
-      chat: [
-        ...state.chat,
-        { uid: state.uid, message: state.input },
-      ],
+      chat: [...state.chat, { uid: state.uid, message: state.input }],
     }));
   },
   addChar: (char) => {
