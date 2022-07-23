@@ -18,7 +18,7 @@ import useStore, { Chat } from '@/store';
 import { command } from '@/utils/constants';
 import { db } from '@/firebase';
 import Prompt from '@/components/prompt';
-import { ThreeDotLoader } from '@/components/ui';
+import { Notification } from '@/components/ui';
 
 const ChatBox: React.FC = () => {
   const uid = useStore((state) => state.uid);
@@ -185,11 +185,10 @@ const ChatBox: React.FC = () => {
       {uid && (
         <>
           {active && (
-            <div className="mb-2">
-              <p className="text-gray">
-                you are now chatting with a random stranger.
-              </p>
-            </div>
+            <Notification
+              className="mb-2"
+              text="you are now chatting with a random stranger."
+            />
           )}
           {chat.map((chat, i) => (
             <div
@@ -213,7 +212,13 @@ const ChatBox: React.FC = () => {
             </div>
           ))}
           <Prompt cursor={cursor} />
-          {searching && <ThreeDotLoader className='mt-2' text="searching for a stranger" />}
+          {searching && (
+            <Notification
+              className="mt-2"
+              subClassName="three-dot-loader"
+              text="searching for a stranger..."
+            />
+          )}
         </>
       )}
     </div>

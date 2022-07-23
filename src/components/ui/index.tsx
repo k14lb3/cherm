@@ -1,1 +1,1 @@
-export * from './three-dot-loader';
+export * from './notification';

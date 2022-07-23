@@ -1,17 +1,19 @@
 import React, { DetailedHTMLProps, HTMLAttributes } from 'react';
 
-interface ThreeDotLoaderProps
+interface NotificationProps
   extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
+  subClassName?: string;
   text: string;
 }
 
-export const ThreeDotLoader: React.FC<ThreeDotLoaderProps> = ({
+export const Notification: React.FC<NotificationProps> = ({
+  subClassName,
   text,
   ...rest
 }) => {
   return (
     <div {...rest}>
-      <p className="three-dot-loader text-gray">{text}...</p>
+      <p className={`text-gray ${subClassName}`}>{text}</p>
     </div>
   );
 };
