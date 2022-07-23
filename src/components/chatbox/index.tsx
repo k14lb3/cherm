@@ -116,10 +116,12 @@ const ChatBox: React.FC = () => {
   const cancelSearch = async () => {
     const roomsRef = collection(db, 'rooms');
 
-    unsubRoomRef.current && unsubRoomRef.current();
-    unsubRoomChatRef.current && unsubRoomChatRef.current();
+    if (roomId) {
+      unsubRoomRef.current && unsubRoomRef.current();
+      unsubRoomChatRef.current && unsubRoomChatRef.current();
 
-    await deleteDoc(doc(roomsRef, roomId));
+      await deleteDoc(doc(roomsRef, roomId));
+    }
 
     setSearching(false);
     clearInput();
