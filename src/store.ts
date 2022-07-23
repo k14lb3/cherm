@@ -21,52 +21,31 @@ interface StoreProps {
   setRoomId: (id: string) => void;
 }
 
-const useStore = create<StoreProps>((set) => ({
+const useStore = create<StoreProps>((set, get) => ({
   uid: '',
   input: '',
   chat: [],
   roomId: '',
   setUid: (uid) => {
-    set((state) => ({
-      ...state,
-      uid: uid,
-    }));
+    set({ uid: uid });
   },
   setChat: (chat) => {
-    set((state) => ({
-      ...state,
-      chat: chat,
-    }));
+    set({ chat: chat });
   },
   clearInput: () => {
-    set((state) => ({
-      ...state,
-      input: '',
-    }));
+    set({ input: '' });
   },
   addInput: () => {
-    set((state) => ({
-      ...state,
-      chat: [...state.chat, { uid: state.uid, message: state.input }],
-    }));
+    set({ chat: [...get().chat, { uid: get().uid, message: get().input }] });
   },
   addChar: (char) => {
-    set((state) => ({
-      ...state,
-      input: state.input + char,
-    }));
+    set({ input: get().input + char });
   },
   deleteChar: () => {
-    set((state) => ({
-      ...state,
-      input: state.input.slice(0, -1),
-    }));
+    set({ input: get().input.slice(0, -1) });
   },
   setRoomId: (id) => {
-    set((state) => ({
-      ...state,
-      roomId: id,
-    }));
+    set({ roomId: id });
   },
 }));
 
