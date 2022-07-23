@@ -113,6 +113,19 @@ const ChatBox: React.FC = () => {
     await createRoom();
   };
 
+  const cancelSearch = async () => {
+    const roomsRef = collection(db, 'rooms');
+
+    unsubRoomRef.current && unsubRoomRef.current();
+    unsubRoomChatRef.current && unsubRoomChatRef.current();
+
+    await deleteDoc(doc(roomsRef, roomId));
+
+    setSearching(false);
+    clearInput();
+    setCursor(true);
+  };
+
   const sendChat = async (input: string) => {
     const roomsRef = collection(db, 'rooms');
 
@@ -136,14 +149,8 @@ const ChatBox: React.FC = () => {
 
   useEffect(() => {
     const keydownEvents = (e: KeyboardEvent) => {
-      if (searching) {
-        if (e.ctrlKey && e.key.toLowerCase() === 'c') {
-          setSearching(false);
-          clearInput();
-          setCursor(true);
-        }
-        return;
-      }
+      if (searching && e.ctrlKey && e.key.toLowerCase() === 'c')
+        return cancelSearch();
 
       const c = e.key;
 
@@ -168,7 +175,7 @@ const ChatBox: React.FC = () => {
     return () => {
       window.removeEventListener('keydown', keydownEvents);
     };
-  }, [input, searching]);
+  }, [input, searching, roomId]);
 
   return (
     <div className="flex-grow p-4 mt-4 border-solid border-[0.025rem] border-white rounded">
