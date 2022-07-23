@@ -192,7 +192,11 @@ const ChatBox: React.FC = () => {
             <div className="mb-2">
               <p>
                 <span className="font-bold">
-                  {chat.uid === uid ? 'you' : 'stranger'} :{' '}
+                  {active
+                    ? chat.uid === uid
+                      ? 'you : '
+                      : 'stranger : '
+                    : '[me@cherm] → '}
                 </span>
                 {chat.message}
               </p>
