@@ -190,7 +190,7 @@ const ChatBox: React.FC = () => {
           )}
           {chat.map((chat) => (
             <div className="mb-2">
-              <p>
+              <p className='break-all'>
                 <span className="font-bold">
                   {active
                     ? chat.uid === uid
