@@ -188,8 +188,15 @@ const ChatBox: React.FC = () => {
               </p>
             </div>
           )}
-          {chat.map((chat) => (
-            <div className="mb-2">
+          {chat.map((chat, i) => (
+            <div
+              key={
+                chat.timestamp
+                  ? `chat-${chat.timestamp.toDate().toString()}`
+                  : `chat-${i}`
+              }
+              className="mb-2"
+            >
               <p className="break-all">
                 <span className="font-bold">
                   {active
