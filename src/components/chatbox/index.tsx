@@ -18,6 +18,7 @@ import useStore, { Chat } from '@/store';
 import { command } from '@/utils/constants';
 import { db } from '@/firebase';
 import Prompt from '@/components/prompt';
+import { ThreeDotLoader } from '@/components/ui';
 
 const ChatBox: React.FC = () => {
   const uid = useStore((state) => state.uid);
@@ -212,11 +213,7 @@ const ChatBox: React.FC = () => {
             </div>
           ))}
           <Prompt cursor={cursor} />
-          {searching && (
-            <p className="three-dot-loader mt-2 text-gray">
-              searching for a stranger...
-            </p>
-          )}
+          {searching && <ThreeDotLoader className='mt-2' text="searching for a stranger" />}
         </>
       )}
     </div>
