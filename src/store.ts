@@ -11,18 +11,21 @@ interface StoreProps {
   uid: string;
   input: string;
   chat: Chat[];
+  roomId: string;
   setUid: (uid: string) => void;
   setChat: (chat: Chat[]) => void;
   clearInput: () => void;
   addInput: () => void;
   addChar: (c: string) => void;
   deleteChar: () => void;
+  setRoomId: (id: string) => void;
 }
 
 const useStore = create<StoreProps>((set) => ({
   uid: '',
   input: '',
   chat: [],
+  roomId: '',
   setUid: (uid) => {
     set((state) => ({
       ...state,
@@ -57,6 +60,12 @@ const useStore = create<StoreProps>((set) => ({
     set((state) => ({
       ...state,
       input: state.input.slice(0, -1),
+    }));
+  },
+  setRoomId: (id) => {
+    set((state) => ({
+      ...state,
+      roomId: id,
     }));
   },
 }));
