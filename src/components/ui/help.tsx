@@ -4,11 +4,8 @@ import { Notification } from '@/components/ui';
 const help = [
   {
     command: 'search    ',
-    action: 'search for a stranger to chat with',
-  },
-  {
-    command: 'exit      ',
-    action: 'exit chat with stranger',
+    action:
+      'search for a stranger to chat with (press <Ctrl+z> to stop searching)',
   },
 ];
 
