@@ -114,7 +114,7 @@ const ChatBox: React.FC = () => {
     await createRoom();
   };
 
-  const cancelSearch = async () => {
+  const stopSearch = async () => {
     const roomsRef = collection(db, 'rooms');
 
     if (roomId) {
@@ -152,8 +152,8 @@ const ChatBox: React.FC = () => {
 
   useEffect(() => {
     const keydownEvents = (e: KeyboardEvent) => {
-      if (searching && e.ctrlKey && e.key.toLowerCase() === 'c')
-        return cancelSearch();
+      if (searching && e.ctrlKey && e.key.toLowerCase() === 'z')
+        return stopSearch();
 
       const c = e.key;
 
