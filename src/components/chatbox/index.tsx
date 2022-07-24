@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { Fragment, useRef, useEffect, useState } from 'react';
 import {
   Unsubscribe,
   serverTimestamp,
@@ -18,7 +18,7 @@ import useStore, { Chat } from '@/store';
 import { command } from '@/utils/constants';
 import { db } from '@/firebase';
 import Prompt from '@/components/prompt';
-import { Notification } from '@/components/ui';
+import { Notification, Help } from '@/components/ui';
 
 const ChatBox: React.FC = () => {
   const uid = useStore((state) => state.uid);
@@ -190,27 +190,34 @@ const ChatBox: React.FC = () => {
               text="you are now chatting with a random stranger."
             />
           )}
-          {chat.map((chat, i) => (
-            <div
-              key={
-                chat.timestamp
-                  ? `chat-${chat.timestamp.toDate().toString()}`
-                  : `chat-${i}`
-              }
-              className="mb-2"
-            >
-              <p className="break-all">
-                <span className="font-bold">
-                  {active
-                    ? chat.uid === uid
-                      ? 'you : '
-                      : 'stranger : '
-                    : '[me@cherm] → '}
-                </span>
-                {chat.message}
-              </p>
-            </div>
-          ))}
+          {chat.map((chat, i) => {
+            const key: React.Key = chat.timestamp
+              ? `chat-${chat.timestamp.toDate().toString()}`
+              : `chat-${i}`;
+
+            return (
+              <>
+                {((chat.uid === uid && chat.message === 'cherm help') ||
+                  chat.message !== 'cherm help') && (
+                  <div key={key} className="mb-2">
+                    <p className="break-all">
+                      <span className="font-bold">
+                        {active
+                          ? chat.uid === uid
+                            ? 'you : '
+                            : 'stranger : '
+                          : '[me@cherm] → '}
+                      </span>
+                      {chat.message}
+                    </p>
+                  </div>
+                )}
+                {chat.message === 'cherm help' && chat.uid === uid && (
+                  <Help key={key + '-help'} />
+                )}
+              </>
+            );
+          })}
           <Prompt cursor={cursor} />
           {searching && (
             <Notification
