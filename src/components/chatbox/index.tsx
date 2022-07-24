@@ -129,7 +129,7 @@ const ChatBox: React.FC = () => {
     setCursor(true);
   };
 
-  const sendChat = async (input: string) => {
+  const sendChat = async () => {
     const roomsRef = collection(db, 'rooms');
 
     await addDoc(collection(roomsRef, roomId, 'chat'), {
@@ -143,7 +143,7 @@ const ChatBox: React.FC = () => {
     if (input === command.search) return search();
 
     if (active) {
-      sendChat(input);
+      sendChat();
     } else {
       addInput();
     }
