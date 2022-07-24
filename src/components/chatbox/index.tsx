@@ -21,6 +21,8 @@ import Prompt from '@/components/prompt';
 import { Notification, Help } from '@/components/ui';
 
 const ChatBox: React.FC = () => {
+  const initial = useStore((state) => state.initial);
+  const start = useStore((state) => state.start);
   const uid = useStore((state) => state.uid);
   const input = useStore((state) => state.input);
   const chat = useStore((state) => state.chat);
@@ -180,8 +182,19 @@ const ChatBox: React.FC = () => {
     };
   }, [input, searching, roomId]);
 
+  useEffect(() => {
+    if (active && initial) start();
+  }, [active]);
+
   return (
     <div className="flex-grow p-4 mt-4 border-solid border-[0.025rem] border-white rounded">
+      {initial && (
+        <Notification
+          className="mb-2"
+          subClassName="break-all"
+          text="type 'cherm help' to display available commands."
+        />
+      )}
       {uid && (
         <>
           {active && (

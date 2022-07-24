@@ -8,6 +8,8 @@ export interface Chat {
 }
 
 interface StoreProps {
+  initial: boolean;
+  start: () => void;
   uid: string;
   input: string;
   chat: Chat[];
@@ -22,6 +24,10 @@ interface StoreProps {
 }
 
 const useStore = create<StoreProps>((set, get) => ({
+  initial: true,
+  start: () => {
+    set({ initial: false });
+  },
   uid: '',
   input: '',
   chat: [],
