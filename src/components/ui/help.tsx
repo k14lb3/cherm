@@ -18,18 +18,15 @@ export const Help: React.FC<HelpProps> = ({ key }) => {
     <React.Fragment key={key}>
       <Notification
         className="mb-2"
-        subClassName="break-all"
         text="usage : cherm <command>"
       />
       <Notification
         className="mb-2"
-        subClassName="break-all"
         text="commands :"
       />
       {help.map(({ command, action }) => (
         <Notification
           className="mb-2"
-          subClassName="break-all"
           text={` ${command}${action}`.replaceAll(' ', '\u00a0')}
         />
       ))}

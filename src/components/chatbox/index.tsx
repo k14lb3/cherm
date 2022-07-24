@@ -191,7 +191,6 @@ const ChatBox: React.FC = () => {
       {initial && (
         <Notification
           className="mb-2"
-          subClassName="break-all"
           text="type 'cherm help' to display available commands."
         />
       )}

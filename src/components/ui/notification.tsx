@@ -16,7 +16,7 @@ export const Notification: React.FC<NotificationProps> = ({
 }) => {
   return (
     <div {...rest}>
-      <p className={`text-gray ${subClassName}`}>{text}</p>
+      <p className={`text-gray break-all ${subClassName}`}>{text}</p>
     </div>
   );
 };
