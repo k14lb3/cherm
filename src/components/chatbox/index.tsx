@@ -207,11 +207,13 @@ const ChatBox: React.FC = () => {
               ? `chat-${chat.timestamp.toDate().toString()}`
               : `chat-${i}`;
 
+            console.log(key);
+
             return (
-              <>
+              <React.Fragment key={key}>
                 {((chat.uid === uid && chat.message === 'cherm help') ||
                   chat.message !== 'cherm help') && (
-                  <div key={key} className="mb-2">
+                  <div className="mb-2">
                     <p className="break-all">
                       <span className="font-bold">
                         {active
@@ -225,9 +227,9 @@ const ChatBox: React.FC = () => {
                   </div>
                 )}
                 {chat.message === 'cherm help' && chat.uid === uid && (
-                  <Help key={key + '-help'} />
+                  <Help parentKey={key} />
                 )}
-              </>
+              </React.Fragment>
             );
           })}
           <Prompt cursor={cursor} />

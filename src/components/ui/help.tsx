@@ -10,26 +10,21 @@ const help = [
 ];
 
 interface HelpProps {
-  key?: React.Key;
+  parentKey: React.Key;
 }
 
-export const Help: React.FC<HelpProps> = ({ key }) => {
+export const Help: React.FC<HelpProps> = ({ parentKey }) => {
   return (
-    <React.Fragment key={key}>
-      <Notification
-        className="mb-2"
-        text="usage : cherm <command>"
-      />
-      <Notification
-        className="mb-2"
-        text="commands :"
-      />
+    <>
+      <Notification className="mb-2" text="usage : cherm <command>" />
+      <Notification className="mb-2" text="commands :" />
       {help.map(({ command, action }) => (
         <Notification
+          key={parentKey + '-help-' + command}
           className="mb-2"
           text={` ${command}${action}`.replaceAll(' ', '\u00a0')}
         />
       ))}
-    </React.Fragment>
+    </>
   );
 };
