@@ -207,8 +207,6 @@ const ChatBox: React.FC = () => {
               ? `chat-${chat.timestamp.toDate().toString()}`
               : `chat-${i}`;
 
-            console.log(key);
-
             return (
               <React.Fragment key={key}>
                 {((chat.uid === uid && chat.message === 'cherm help') ||
