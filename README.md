@@ -9,6 +9,6 @@
 
 ---
 
-Chat application.
+Terminal-like chat application.
 
 (⌐■_■)
