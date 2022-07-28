@@ -35,7 +35,7 @@ const ChatBox: React.FC = () => {
   const setRoomId = useStore((state) => state.setRoomId);
   const unsubRoomRef = useRef<Unsubscribe>();
   const unsubRoomChatRef = useRef<Unsubscribe>();
-  const [active, setActive] = useState<boolean>(false);
+  const [chatting, setChatting] = useState<boolean>(false);
   const [searching, setSearching] = useState<boolean>(false);
   const [cursor, setCursor] = useState<boolean>(true);
 
@@ -70,7 +70,7 @@ const ChatBox: React.FC = () => {
       );
 
       setSearching(false);
-      setActive(true);
+      setChatting(true);
       clearInput();
       setCursor(true);
 
@@ -97,7 +97,7 @@ const ChatBox: React.FC = () => {
           );
 
           setSearching(false);
-          setActive(true);
+          setChatting(true);
           clearInput();
           setCursor(true);
         }
@@ -144,7 +144,7 @@ const ChatBox: React.FC = () => {
   const parseInput = (input: string) => {
     if (input === command.search) return search();
 
-    if (active) {
+    if (chatting) {
       sendChat();
     } else {
       addInput();
@@ -183,8 +183,8 @@ const ChatBox: React.FC = () => {
   }, [input, searching, roomId]);
 
   useEffect(() => {
-    if (active && initial) start();
-  }, [active]);
+    if (chatting && initial) start();
+  }, [chatting]);
 
   return (
     <div className="flex-grow p-4 mt-4 border-solid border-[0.025rem] border-white rounded">
@@ -196,7 +196,7 @@ const ChatBox: React.FC = () => {
       )}
       {uid && (
         <>
-          {active && (
+          {chatting && (
             <Notification
               className="mb-2"
               text="you are now chatting with a random stranger."
@@ -214,7 +214,7 @@ const ChatBox: React.FC = () => {
                   <div className="mb-2">
                     <p className="break-all">
                       <span className="font-bold">
-                        {active
+                        {chatting
                           ? chat.uid === uid
                             ? 'you : '
                             : 'stranger : '
