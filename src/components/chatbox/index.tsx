@@ -142,7 +142,7 @@ const ChatBox: React.FC = () => {
   };
 
   const parseInput = (input: string) => {
-    if (input === command.search) return search();
+    if (!chatting && input === command.search) return search();
 
     if (chatting) {
       sendChat();
