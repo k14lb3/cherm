@@ -3,6 +3,10 @@ import { Notification } from '@/components/ui';
 
 const help = [
   {
+    command: 'help      ',
+    action: 'display available commands',
+  },
+  {
     command: 'search    ',
     action:
       'search for a stranger to chat with (press <Ctrl+z> to stop searching)',
