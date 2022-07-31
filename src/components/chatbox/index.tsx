@@ -14,10 +14,11 @@ import {
   updateDoc,
   deleteDoc,
 } from 'firebase/firestore';
+import { command, notification } from '@/utils/constants';
 import useStore, { Chat } from '@/store';
-import { command } from '@/utils/constants';
 import { db } from '@/firebase';
 import Prompt from '@/components/prompt';
+import Message from '@/components/message';
 import { Notification, Help } from '@/components/ui';
 
 const ChatBox: React.FC = () => {
@@ -61,6 +62,23 @@ const ChatBox: React.FC = () => {
 
       unsubRoomRef.current = onSnapshot(doc(roomsRef, roomId), async (doc) => {
         const room = doc.data();
+
+        if (!room!.active) {
+          const roomChatColSnapshot = await getDocs(
+            query(collection(roomsRef, roomId, 'chat'), orderBy('timestamp')),
+          );
+
+          const chat = roomChatColSnapshot.docs.map(
+            (doc) => doc.data() as Chat,
+          );
+
+          setChat([
+            ...chat,
+            { uid: 'system', message: notification.disconnect.stranger },
+          ]);
+
+          setChatting(false);
+        }
       });
 
       unsubRoomChatRef.current = onSnapshot(
@@ -89,6 +107,8 @@ const ChatBox: React.FC = () => {
       unsubRoomRef.current = onSnapshot(doc(roomsRef, uid), async (doc) => {
         const room = doc.data();
 
+        if (!room!.active) return;
+
         if (!room!.available) {
           unsubRoomChatRef.current = onSnapshot(
             query(collection(roomsRef, uid, 'chat'), orderBy('timestamp')),
@@ -100,7 +120,15 @@ const ChatBox: React.FC = () => {
           setChatting(true);
           clearInput();
           setCursor(true);
+
+          return;
         }
+      });
+
+      await addDoc(collection(roomsRef, uid, 'chat'), {
+        uid: 'system',
+        message: notification.chatting,
+        timestamp: serverTimestamp(),
       });
     };
 
@@ -131,15 +159,24 @@ const ChatBox: React.FC = () => {
     setCursor(true);
   };
 
-  const sendChat = async () => {
+  const exitChat = async () => {
     const roomsRef = collection(db, 'rooms');
 
-    await addDoc(collection(roomsRef, roomId, 'chat'), {
+    await updateDoc(doc(roomsRef, roomId), {
+      active: false,
+    });
+
+    setChat([...chat, { uid: 'system', message: notification.disconnect.me }]);
+
+    setChatting(false);
+  };
+
+  const sendChat = async () =>
+    await addDoc(collection(collection(db, 'rooms'), roomId, 'chat'), {
       uid: uid,
       message: input,
       timestamp: serverTimestamp(),
     });
-  };
 
   const parseInput = (input: string) => {
     if (!chatting && input === command.search) return search();
@@ -153,9 +190,35 @@ const ChatBox: React.FC = () => {
   };
 
   useEffect(() => {
+    if (!chatting && roomId) {
+      const deleteRoom = async () => {
+        const roomsRef = collection(db, 'rooms');
+        const chatsRef = collection(roomsRef, roomId, 'chat');
+        const roomChatColSnapshot = await getDocs(chatsRef);
+
+        roomChatColSnapshot.docs.forEach(async (snapshot) => {
+          await deleteDoc(doc(chatsRef, snapshot.id));
+        });
+
+        await deleteDoc(doc(roomsRef, roomId));
+      };
+
+      unsubRoomRef.current && unsubRoomRef.current();
+
+      unsubRoomChatRef.current && unsubRoomChatRef.current();
+
+      deleteRoom();
+
+      setRoomId('');
+    }
+  }, [chatting]);
+
+  useEffect(() => {
     const keydownEvents = (e: KeyboardEvent) => {
-      if (searching && e.ctrlKey && e.key.toLowerCase() === 'z')
-        return stopSearch();
+      if (e.ctrlKey && e.key.toLowerCase() === 'z') {
+        if (searching) return stopSearch();
+        if (chatting) return exitChat();
+      }
 
       const c = e.key;
 
@@ -180,54 +243,44 @@ const ChatBox: React.FC = () => {
     return () => {
       window.removeEventListener('keydown', keydownEvents);
     };
-  }, [input, searching, roomId]);
+  }, [input, searching, roomId, chatting, chat]);
 
   useEffect(() => {
     if (chatting && initial) start();
   }, [chatting]);
 
+  const message = (chat: Chat, key: React.Key) => {
+    if (chat.uid === 'system')
+      return <Notification className="mb-2" text={chat.message} />;
+
+    if (
+      (chat.uid === uid && chat.message === 'cherm help') ||
+      chat.message !== 'cherm help'
+    )
+      return (
+        <>
+          <Message className="mb-2" chat={chat} />
+          {chat.message === 'cherm help' && chat.uid === uid && (
+            <Help parentKey={key} />
+          )}
+        </>
+      );
+
+    return <></>;
+  };
+
   return (
     <div className="flex-grow p-4 mt-4 border-solid border-[0.025rem] border-white rounded">
-      {initial && (
-        <Notification
-          className="mb-2"
-          text="type 'cherm help' to display available commands."
-        />
-      )}
+      {initial && <Notification className="mb-2" text={notification.initial} />}
       {uid && (
         <>
-          {chatting && (
-            <Notification
-              className="mb-2"
-              text="you are now chatting with a random stranger."
-            />
-          )}
           {chat.map((chat, i) => {
-            const key: React.Key = chat.timestamp
+            const key = chat.timestamp
               ? `chat-${chat.timestamp.toDate().toString()}`
               : `chat-${i}`;
 
             return (
-              <React.Fragment key={key}>
-                {((chat.uid === uid && chat.message === 'cherm help') ||
-                  chat.message !== 'cherm help') && (
-                  <div className="mb-2">
-                    <p className="break-all">
-                      <span className="font-bold">
-                        {chatting
-                          ? chat.uid === uid
-                            ? 'you : '
-                            : 'stranger : '
-                          : '[me@cherm] → '}
-                      </span>
-                      {chat.message}
-                    </p>
-                  </div>
-                )}
-                {chat.message === 'cherm help' && chat.uid === uid && (
-                  <Help parentKey={key} />
-                )}
-              </React.Fragment>
+              <React.Fragment key={key}>{message(chat, key)}</React.Fragment>
             );
           })}
           <Prompt cursor={cursor} />
