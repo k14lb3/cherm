@@ -1,5 +1,6 @@
-import { Timestamp } from 'firebase/firestore';
 import create from 'zustand';
+import { Timestamp } from 'firebase/firestore';
+import { notification } from '@/utils/constants';
 
 export interface Chat {
   timestamp?: Timestamp;
@@ -8,8 +9,6 @@ export interface Chat {
 }
 
 interface StoreProps {
-  initial: boolean;
-  start: () => void;
   uid: string;
   input: string;
   chat: Chat[];
@@ -24,13 +23,9 @@ interface StoreProps {
 }
 
 const useStore = create<StoreProps>((set, get) => ({
-  initial: true,
-  start: () => {
-    set({ initial: false });
-  },
   uid: '',
   input: '',
-  chat: [],
+  chat: [{ uid: 'system', message: notification.initial }],
   roomId: '',
   setUid: (uid) => {
     set({ uid: uid });

@@ -22,8 +22,6 @@ import Message from '@/components/message';
 import { Notification, Help } from '@/components/ui';
 
 const ChatBox: React.FC = () => {
-  const initial = useStore((state) => state.initial);
-  const start = useStore((state) => state.start);
   const uid = useStore((state) => state.uid);
   const input = useStore((state) => state.input);
   const chat = useStore((state) => state.chat);
@@ -190,8 +188,6 @@ const ChatBox: React.FC = () => {
   };
 
   useEffect(() => {
-    if (chatting && initial) start();
-
     if (!chatting && roomId) {
       const deleteRoom = async () => {
         const roomsRef = collection(db, 'rooms');
@@ -215,7 +211,6 @@ const ChatBox: React.FC = () => {
 
       return;
     }
-
   }, [chatting]);
 
   useEffect(() => {
@@ -272,7 +267,6 @@ const ChatBox: React.FC = () => {
 
   return (
     <div className="flex-grow p-4 mt-4 border-solid border-[0.025rem] border-white rounded">
-      {initial && <Notification className="mb-2" text={notification.initial} />}
       {uid && (
         <>
           {chat.map((chat, i) => {
