@@ -19,7 +19,8 @@ export interface Notification {
 
 export const notification: Notification = {
   initial: "type 'cherm help' to display available commands.",
-  chatting: 'you are now chatting with a random stranger.',
+  chatting:
+    'you are now chatting with a random stranger. (press <Ctrl+z> to exit chat)',
   disconnect: {
     me: 'you have disconnected.',
     stranger: 'stranger has disconnected.',
