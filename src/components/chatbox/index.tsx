@@ -190,6 +190,8 @@ const ChatBox: React.FC = () => {
   };
 
   useEffect(() => {
+    if (chatting && initial) start();
+
     if (!chatting && roomId) {
       const deleteRoom = async () => {
         const roomsRef = collection(db, 'rooms');
@@ -210,7 +212,10 @@ const ChatBox: React.FC = () => {
       deleteRoom();
 
       setRoomId('');
+
+      return;
     }
+
   }, [chatting]);
 
   useEffect(() => {
@@ -244,10 +249,6 @@ const ChatBox: React.FC = () => {
       window.removeEventListener('keydown', keydownEvents);
     };
   }, [input, searching, roomId, chatting, chat]);
-
-  useEffect(() => {
-    if (chatting && initial) start();
-  }, [chatting]);
 
   const message = (chat: Chat, key: React.Key) => {
     if (chat.uid === 'system')
