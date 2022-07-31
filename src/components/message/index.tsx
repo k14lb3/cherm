@@ -1,4 +1,5 @@
 import React from 'react';
+import { isCommand } from '@/utils/helpers';
 import useStore, { Chat } from '@/store';
 
 interface MessageProps
@@ -17,9 +18,9 @@ const Message: React.FC<MessageProps> = ({ chat, ...rest }) => {
       <p className="break-all">
         <span className="font-bold">
           {chat.uid === uid
-            ? chat.timestamp
-              ? 'you : '
-              : '[me@cherm] → '
+            ? isCommand(chat.message) || !chat.timestamp
+              ? '[me@cherm] → '
+              : 'you : '
             : 'stranger : '}
         </span>
         {chat.message}
