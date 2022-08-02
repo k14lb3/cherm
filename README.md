@@ -9,6 +9,6 @@
 
 ---
 
-[cherm](https://cherm.vercel.app/) is a terminal-like chat application which lets you chat with random strangers.
+[cherm](https://cherm.vercel.app/) is a terminal-like chat application that lets you chat with random strangers.
 
 (⌐■_■)
