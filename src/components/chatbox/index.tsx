@@ -1,4 +1,4 @@
-import React, { Fragment, useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import {
   Unsubscribe,
   serverTimestamp,
@@ -27,16 +27,22 @@ const ChatBox: React.FC = () => {
   const chat = useStore((state) => state.chat);
   const roomId = useStore((state) => state.roomId);
   const setChat = useStore((state) => state.setChat);
+  const setInput = useStore((state) => state.setInput);
+  const addInput = useStore((state) => state.enterInput);
   const clearInput = useStore((state) => state.clearInput);
-  const addInput = useStore((state) => state.addInput);
-  const addChar = useStore((state) => state.addChar);
-  const deleteChar = useStore((state) => state.deleteChar);
   const setRoomId = useStore((state) => state.setRoomId);
+  const inputRef = useRef<HTMLInputElement>(null);
   const unsubRoomRef = useRef<Unsubscribe>();
   const unsubRoomChatRef = useRef<Unsubscribe>();
   const [chatting, setChatting] = useState<boolean>(false);
   const [searching, setSearching] = useState<boolean>(false);
-  const [cursor, setCursor] = useState<boolean>(true);
+  const [cursor, setCursor] = useState<{
+    visible: boolean;
+    pos: number;
+  }>({
+    visible: true,
+    pos: 0,
+  });
 
   const search = async () => {
     const roomsRef = collection(db, 'rooms');
@@ -88,7 +94,7 @@ const ChatBox: React.FC = () => {
       setSearching(false);
       setChatting(true);
       clearInput();
-      setCursor(true);
+      setCursor((cursor) => ({ ...cursor, visible: true }));
 
       return true;
     };
@@ -117,7 +123,7 @@ const ChatBox: React.FC = () => {
           setSearching(false);
           setChatting(true);
           clearInput();
-          setCursor(true);
+          setCursor((cursor) => ({ ...cursor, visible: true }));
 
           return;
         }
@@ -131,7 +137,7 @@ const ChatBox: React.FC = () => {
     };
 
     setSearching(true);
-    setCursor(false);
+    setCursor((cursor) => ({ ...cursor, visible: false }));
 
     const suc = await joinRoom();
 
@@ -154,7 +160,7 @@ const ChatBox: React.FC = () => {
 
     setSearching(false);
     clearInput();
-    setCursor(true);
+    setCursor((cursor) => ({ ...cursor, visible: true }));
   };
 
   const exitChat = async () => {
@@ -188,6 +194,12 @@ const ChatBox: React.FC = () => {
   };
 
   useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
+
+  useEffect(() => {
     if (!chatting && roomId) {
       const deleteRoom = async () => {
         const roomsRef = collection(db, 'rooms');
@@ -215,35 +227,36 @@ const ChatBox: React.FC = () => {
 
   useEffect(() => {
     const keydownEvents = (e: KeyboardEvent) => {
-      if (e.ctrlKey && e.key.toLowerCase() === 'z') {
+      const c = e.key;
+
+      if (e.ctrlKey && c.toLowerCase() === 'z') {
         if (searching) return stopSearch();
         if (chatting) return exitChat();
       }
 
-      const c = e.key;
-
       switch (c) {
         case 'Enter':
           parseInput(input);
-          break;
-        case 'Backspace':
-          deleteChar();
-          break;
-        case ' ':
-          addChar(' ');
-          break;
-        default:
-          if (c.length === 1) {
-            addChar(e.key);
-          }
+          setCursor((cursor) => ({ ...cursor, pos: 0 }));
+          return;
       }
     };
+
     window.addEventListener('keydown', keydownEvents);
 
     return () => {
       window.removeEventListener('keydown', keydownEvents);
     };
   }, [input, searching, roomId, chatting, chat]);
+
+  useEffect(() => {
+    if (!inputRef.current) return;
+
+    setCursor((cursor) => ({
+      ...cursor,
+      pos: inputRef.current?.selectionStart as number,
+    }));
+  }, [inputRef.current?.selectionStart]);
 
   const message = (chat: Chat, key: React.Key) => {
     if (chat.uid === 'system')
@@ -266,19 +279,28 @@ const ChatBox: React.FC = () => {
   };
 
   return (
-    <div className="flex-grow p-4 mt-4 border-solid border-[0.025rem] border-white rounded">
+    <div
+      className="flex-grow mt-4 p-4 border-solid border-[0.025rem] border-white rounded"
+      onClick={() => inputRef.current?.focus()}
+    >
+      <input
+        ref={inputRef}
+        className="absolute inset-0 h-0"
+        type="text"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+      />
       {uid && (
         <>
           {chat.map((chat, i) => {
             const key = chat.timestamp
               ? `chat-${chat.timestamp.toDate().toString()}`
               : `chat-${i}`;
-
             return (
               <React.Fragment key={key}>{message(chat, key)}</React.Fragment>
             );
           })}
-          <Prompt cursor={cursor} />
+          <Prompt cursorState={[cursor, setCursor]} />
           {searching && (
             <Notification
               className="mt-2"

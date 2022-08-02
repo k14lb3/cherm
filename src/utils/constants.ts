@@ -26,3 +26,5 @@ export const notification: Notification = {
     stranger: 'stranger has disconnected.',
   },
 };
+
+export const ps1 = '[me@cherm] → ';

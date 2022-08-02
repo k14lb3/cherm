@@ -1,4 +1,5 @@
 import React from 'react';
+import { ps1 } from '@/utils/constants';
 import { isCommand } from '@/utils/helpers';
 import useStore, { Chat } from '@/store';
 
@@ -19,7 +20,7 @@ const Message: React.FC<MessageProps> = ({ chat, ...rest }) => {
         <span className="font-bold">
           {chat.uid === uid
             ? isCommand(chat.message) || !chat.timestamp
-              ? '[me@cherm] → '
+              ? ps1 
               : 'you : '
             : 'stranger : '}
         </span>

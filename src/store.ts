@@ -15,10 +15,9 @@ interface StoreProps {
   roomId: string;
   setUid: (uid: string) => void;
   setChat: (chat: Chat[]) => void;
+  setInput: (input: string) => void;
+  enterInput: () => void;
   clearInput: () => void;
-  addInput: () => void;
-  addChar: (c: string) => void;
-  deleteChar: () => void;
   setRoomId: (id: string) => void;
 }
 
@@ -33,17 +32,14 @@ const useStore = create<StoreProps>((set, get) => ({
   setChat: (chat) => {
     set({ chat: chat });
   },
-  clearInput: () => {
-    set({ input: '' });
+  setInput: (input) => {
+    set({ input: input });
   },
-  addInput: () => {
+  enterInput: () => {
     set({ chat: [...get().chat, { uid: get().uid, message: get().input }] });
   },
-  addChar: (char) => {
-    set({ input: get().input + char });
-  },
-  deleteChar: () => {
-    set({ input: get().input.slice(0, -1) });
+  clearInput: () => {
+    set({ input: '' });
   },
   setRoomId: (id) => {
     set({ roomId: id });
