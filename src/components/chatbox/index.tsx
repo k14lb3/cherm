@@ -182,7 +182,11 @@ const ChatBox: React.FC = () => {
       timestamp: serverTimestamp(),
     });
 
-  const parseInput = (input: string) => {
+  const parseInput = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (searching) return;
+
     if (!chatting && input === command.search) return search();
 
     if (chatting) {
@@ -191,6 +195,8 @@ const ChatBox: React.FC = () => {
       addInput();
     }
     clearInput();
+
+    setCursor((cursor) => ({ ...cursor, pos: 0 }));
   };
 
   useEffect(() => {
@@ -226,18 +232,34 @@ const ChatBox: React.FC = () => {
   }, [chatting]);
 
   useEffect(() => {
-    const keydownEvents = (e: KeyboardEvent) => {
-      const c = e.key;
+    const moveCursorLeft = () => {
+      if (cursor.pos === 0) return;
 
-      if (e.ctrlKey && c.toLowerCase() === 'z') {
-        if (searching) return stopSearch();
-        if (chatting) return exitChat();
-      }
+      setCursor((cursor) => ({ ...cursor, pos: cursor.pos-- }));
+    };
+
+    const moveCursorRight = () => {
+      if (cursor.pos === input.length) return;
+
+      setCursor((cursor) => ({ ...cursor, pos: cursor.pos++ }));
+    };
+
+    const keydownEvents = (e: KeyboardEvent) => {
+      const c = e.key.toLowerCase();
 
       switch (c) {
-        case 'Enter':
-          parseInput(input);
-          setCursor((cursor) => ({ ...cursor, pos: 0 }));
+        case 'arrowleft':
+          if (searching) return;
+          moveCursorLeft();
+          return;
+        case 'arrowright':
+          if (searching) return;
+          moveCursorRight();
+          return;
+        case 'z':
+          if (!e.ctrlKey) return;
+          if (searching) return stopSearch();
+          if (chatting) return exitChat();
           return;
       }
     };
@@ -247,7 +269,7 @@ const ChatBox: React.FC = () => {
     return () => {
       window.removeEventListener('keydown', keydownEvents);
     };
-  }, [input, searching, roomId, chatting, chat]);
+  }, [input, cursor, searching, roomId, chatting, chat]);
 
   useEffect(() => {
     if (!inputRef.current) return;
@@ -283,13 +305,16 @@ const ChatBox: React.FC = () => {
       className="flex-grow mt-4 p-4 border-solid border-[0.025rem] border-white rounded"
       onClick={() => inputRef.current?.focus()}
     >
-      <input
-        ref={inputRef}
-        className="absolute inset-0 h-0"
-        type="text"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-      />
+      <form onSubmit={parseInput}>
+        <input
+          ref={inputRef}
+          disabled={searching}
+          className="absolute inset-0 h-0"
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+        />
+      </form>
       {uid && (
         <>
           {chat.map((chat, i) => {
@@ -300,7 +325,7 @@ const ChatBox: React.FC = () => {
               <React.Fragment key={key}>{message(chat, key)}</React.Fragment>
             );
           })}
-          <Prompt cursorState={[cursor, setCursor]} />
+          <Prompt cursor={cursor} searching={searching} />
           {searching && (
             <Notification
               className="mt-2"
