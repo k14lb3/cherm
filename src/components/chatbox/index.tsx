@@ -60,6 +60,12 @@ const ChatBox: React.FC = () => {
 
       setRoomId(roomId);
 
+      await addDoc(collection(roomsRef, roomId, 'chat'), {
+        uid: 'system',
+        message: notification.chatting,
+        timestamp: serverTimestamp(),
+      });
+
       await updateDoc(doc(roomsRef, roomId), {
         available: false,
       });
@@ -127,12 +133,6 @@ const ChatBox: React.FC = () => {
 
           return;
         }
-      });
-
-      await addDoc(collection(roomsRef, uid, 'chat'), {
-        uid: 'system',
-        message: notification.chatting,
-        timestamp: serverTimestamp(),
       });
     };
 
