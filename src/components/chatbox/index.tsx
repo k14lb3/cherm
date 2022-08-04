@@ -302,7 +302,7 @@ const ChatBox: React.FC = () => {
 
   return (
     <div
-      className="flex-grow mt-4 p-4 border-solid border-[0.025rem] border-white rounded"
+      className="flex-grow mt-4 p-4 border-solid border-[0.025rem] border-white rounded overflow-y-scroll"
       onClick={() => inputRef.current?.focus()}
     >
       <form onSubmit={parseInput}>

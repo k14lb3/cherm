@@ -5,6 +5,22 @@
 @tailwind utilities;
 
 @layer base {
+  ::-webkit-scrollbar {
+    @apply bg-white w-[0.75rem] rounded-tr rounded-br;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-white rounded-tr rounded-br;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-black border-solid border-white border-[0.025rem] border-t-0 border-b-0 rounded-tr rounded-br;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-[#292929];
+  }
+
   * {
     @apply box-border p-0 m-0;
   }
