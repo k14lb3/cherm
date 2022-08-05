@@ -232,30 +232,10 @@ const ChatBox: React.FC = () => {
   }, [chatting]);
 
   useEffect(() => {
-    const moveCursorLeft = () => {
-      if (cursor.pos === 0) return;
-
-      setCursor((cursor) => ({ ...cursor, pos: cursor.pos-- }));
-    };
-
-    const moveCursorRight = () => {
-      if (cursor.pos === input.length) return;
-
-      setCursor((cursor) => ({ ...cursor, pos: cursor.pos++ }));
-    };
-
     const keydownEvents = (e: KeyboardEvent) => {
       const c = e.key.toLowerCase();
 
       switch (c) {
-        case 'arrowleft':
-          if (searching) return;
-          moveCursorLeft();
-          return;
-        case 'arrowright':
-          if (searching) return;
-          moveCursorRight();
-          return;
         case 'z':
           if (!e.ctrlKey) return;
           if (searching) return stopSearch();
@@ -269,16 +249,9 @@ const ChatBox: React.FC = () => {
     return () => {
       window.removeEventListener('keydown', keydownEvents);
     };
-  }, [input, cursor, searching, roomId, chatting, chat]);
+  }, [input, searching, roomId, chatting, chat]);
 
-  useEffect(() => {
-    if (!inputRef.current) return;
-
-    setCursor((cursor) => ({
-      ...cursor,
-      pos: inputRef.current?.selectionStart as number,
-    }));
-  }, [inputRef.current?.selectionStart]);
+  console.log(cursor.pos);
 
   const message = (chat: Chat, key: React.Key) => {
     if (chat.uid === 'system')
@@ -313,6 +286,18 @@ const ChatBox: React.FC = () => {
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => {
+            setCursor((cursor) => ({
+              ...cursor,
+              pos: e.target.selectionStart as number,
+            }));
+          }}
+          onKeyUp={(e) => {
+            setCursor((cursor) => ({
+              ...cursor,
+              pos: e.target.selectionStart as number,
+            }));
+          }}
         />
       </form>
       {uid && (
