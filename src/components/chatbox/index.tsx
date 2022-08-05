@@ -236,8 +236,11 @@ const ChatBox: React.FC = () => {
       const c = e.key.toLowerCase();
 
       switch (c) {
+        case 'a':
+          if (e.ctrlKey) e.preventDefault();
+          return;
         case 'z':
-          if (!e.ctrlKey) return;
+          if (e.ctrlKey) e.preventDefault();
           if (searching) return stopSearch();
           if (chatting) return exitChat();
           return;
