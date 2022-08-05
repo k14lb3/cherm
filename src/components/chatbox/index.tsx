@@ -236,6 +236,12 @@ const ChatBox: React.FC = () => {
       const c = e.key.toLowerCase();
 
       switch (c) {
+        case 'arrowup':
+        case 'arrowright':
+        case 'arrowdown':
+        case 'arrowleft':
+          if (e.shiftKey) e.preventDefault();
+          return;
         case 'a':
           if (e.ctrlKey) e.preventDefault();
           return;
