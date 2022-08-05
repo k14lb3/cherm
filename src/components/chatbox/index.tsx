@@ -251,8 +251,6 @@ const ChatBox: React.FC = () => {
     };
   }, [input, searching, roomId, chatting, chat]);
 
-  console.log(cursor.pos);
-
   const message = (chat: Chat, key: React.Key) => {
     if (chat.uid === 'system')
       return <Notification className="mb-2" text={chat.message} />;
