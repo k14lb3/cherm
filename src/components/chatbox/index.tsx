@@ -185,6 +185,8 @@ const ChatBox: React.FC = () => {
   const parseInput = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    setCursor((cursor) => ({ ...cursor, pos: 0 }));
+
     if (searching) return;
 
     if (!chatting && input === command.search) return search();
@@ -195,8 +197,6 @@ const ChatBox: React.FC = () => {
       addInput();
     }
     clearInput();
-
-    setCursor((cursor) => ({ ...cursor, pos: 0 }));
   };
 
   useEffect(() => {
