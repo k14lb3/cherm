@@ -175,14 +175,7 @@ const ChatBox: React.FC = () => {
     setChatting(false);
   };
 
-  const sendChat = async () =>
-    await addDoc(collection(collection(db, 'rooms'), roomId, 'chat'), {
-      uid: uid,
-      message: input,
-      timestamp: serverTimestamp(),
-    });
-
-  const parseInput = (e: React.FormEvent<HTMLFormElement>) => {
+  const parseInput = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     setCursor((cursor) => ({ ...cursor, pos: 0 }));
@@ -192,7 +185,11 @@ const ChatBox: React.FC = () => {
     if (!chatting && input === command.search) return search();
 
     if (chatting) {
-      sendChat();
+      await addDoc(collection(collection(db, 'rooms'), roomId, 'chat'), {
+        uid: uid,
+        message: input,
+        timestamp: serverTimestamp(),
+      });
     } else {
       addInput();
     }
