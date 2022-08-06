@@ -20,7 +20,7 @@ export const autoId = (): string => {
   return autoId;
 };
 
-export const isCommand = (input: string) => {
+export const isValidCommand = (input: string) => {
   const commands = Object.keys(command).map(
     (key) => command[key as keyof Command],
   );
