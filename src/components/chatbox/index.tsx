@@ -28,7 +28,7 @@ const ChatBox: React.FC = () => {
   const roomId = useStore((state) => state.roomId);
   const setChat = useStore((state) => state.setChat);
   const setInput = useStore((state) => state.setInput);
-  const addInput = useStore((state) => state.enterInput);
+  const enterInput = useStore((state) => state.enterInput);
   const clearInput = useStore((state) => state.clearInput);
   const setRoomId = useStore((state) => state.setRoomId);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -191,7 +191,7 @@ const ChatBox: React.FC = () => {
         timestamp: serverTimestamp(),
       });
     } else {
-      addInput();
+      enterInput();
     }
     clearInput();
   };
