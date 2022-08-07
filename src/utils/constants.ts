@@ -1,3 +1,5 @@
+import { Timestamp } from 'firebase/firestore';
+
 export interface Command {
   help: string;
   search: string;
@@ -26,5 +28,11 @@ export const notification: Notification = {
     stranger: 'stranger has disconnected.',
   },
 };
+
+export interface Room {
+  active: boolean;
+  available: boolean;
+  timestamp: Timestamp;
+}
 
 export const ps1 = '[me@cherm] → ';
